@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useState } from "react";
+import Card from "./Components/Card";
+import useFetch from "./Hook/useFetch";
 function App() {
+  const { data, error, loading } = useFetch("   https://api.github.com/users");
+  const [search,setSearch] = useState('')
+
+  const searchUser = (e) =>{
+    setSearch(e.target.value)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <center>
+      <div className="App">
+        <div className="navbar">
+          <input type="text" onChange={searchUser} placeholder="🔎 Enter User Name" />
+        </div>
+
+        <div className="container">
+          {
+          loading ? <h2>Loading.....</h2> 
+          :
+          data.map((val) => {
+            if(val.login.includes(search.toLowerCase()))
+            return <Card data={val} />
+
+          } 
+          )}
+        </div>
+      </div>
+    </center>
   );
 }
 
